@@ -336,27 +336,29 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 _barShadowRectBuffer.origin.y = viewPortHandler.contentTop
                 _barShadowRectBuffer.size.height = viewPortHandler.contentHeight
                 
-//                context.setFillColor(dataSet.barShadowColor.cgColor)
-//                context.fill(_barShadowRectBuffer)
-                
-                let cornerRadius: CGFloat = _barShadowRectBuffer.size.width/2
-                // Create rounded rectangle path
-                let path = UIBezierPath(roundedRect: _barShadowRectBuffer, cornerRadius: cornerRadius).cgPath
-                
-                // Add path to context and fill
-                context.addPath(path)
-                context.setFillColor(dataSet.barShadowColor.cgColor)
-                context.drawPath(using: .fill)
-                
-                // 设置阴影属性
-                let shadowColor = UIColor.black.withAlphaComponent(0.05).cgColor
-                let shadowOffset = CGSize(width: 0, height: 1)
-                let shadowBlur: CGFloat = 2.0
-                
-                context.setShadow(offset: shadowOffset, blur: shadowBlur, color: shadowColor)
-                
-                context.fillPath()
-                
+                if dataProvider.isCircularColumnChart {
+                    //圆角柱状图
+                    let cornerRadius: CGFloat = _barShadowRectBuffer.size.width/2
+                    // Create rounded rectangle path
+                    let path = UIBezierPath(roundedRect: _barShadowRectBuffer, cornerRadius: cornerRadius).cgPath
+                    
+                    // Add path to context and fill
+                    context.addPath(path)
+                    context.setFillColor(dataSet.barShadowColor.cgColor)
+                    context.drawPath(using: .fill)
+                    
+                    // 设置阴影属性
+                    let shadowColor = UIColor.black.withAlphaComponent(0.05).cgColor
+                    let shadowOffset = CGSize(width: 0, height: 1)
+                    let shadowBlur: CGFloat = 2.0
+                    
+                    context.setShadow(offset: shadowOffset, blur: shadowBlur, color: shadowColor)
+                    
+                    context.fillPath()
+                } else {
+                    context.setFillColor(dataSet.barShadowColor.cgColor)
+                    context.fill(_barShadowRectBuffer)
+                }
             }
         }
 
@@ -368,18 +370,20 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             for barRect in buffer where viewPortHandler.isInBoundsLeft(barRect.origin.x + barRect.size.width)
             {
                 guard viewPortHandler.isInBoundsRight(barRect.origin.x) else { break }
-
-                
-                let cornerRadius: CGFloat = barRect.size.width/2
-                // Create rounded rectangle path
-                let path = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
-                
-                // Add path to context and fill
-                context.addPath(path)
-                context.setFillColor(dataSet.barShadowColor.cgColor)
-                context.drawPath(using: .fill)
-                
-//                context.fill(barRect)
+                if dataProvider.isCircularColumnChart {
+                    //圆角柱状图
+                    let cornerRadius: CGFloat = barRect.size.width/2
+                    // Create rounded rectangle path
+                    let path = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
+                    
+                    // Add path to context and fill
+                    context.addPath(path)
+                    context.setFillColor(dataSet.barShadowColor.cgColor)
+                    context.drawPath(using: .fill)
+                } else {
+                    context.setFillColor(dataSet.barShadowColor.cgColor)
+                    context.fill(barRect)
+                }
             }
         }
         
@@ -407,19 +411,22 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 context.setFillColor(dataSet.color(atIndex: j).cgColor)
             }
             
-            // Set corner radius and modify width for rounded corners
-            let cornerRadius: CGFloat = barRect.size.width/2
-            
-            
-            // Create rounded rectangle path
-            let path = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
-            
-            // Add path to context and fill
-            context.addPath(path)
-            context.setFillColor(dataSet.color(atIndex: j).cgColor)
-            context.drawPath(using: .fill)
-            
-//            context.fill(barRect)
+            if dataProvider.isCircularColumnChart {
+                //圆角柱状图
+                // Set corner radius and modify width for rounded corners
+                let cornerRadius: CGFloat = barRect.size.width/2
+                
+                
+                // Create rounded rectangle path
+                let path = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
+                
+                // Add path to context and fill
+                context.addPath(path)
+                context.setFillColor(dataSet.color(atIndex: j).cgColor)
+                context.drawPath(using: .fill)
+            } else {
+                context.fill(barRect)
+            }
             
             if drawBorder
             {
