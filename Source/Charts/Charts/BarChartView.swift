@@ -21,6 +21,8 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
     /// if set to true, a grey area is drawn behind each bar that indicates the maximum value
     private var _drawBarShadowEnabled = false
     
+    private var _circularColumnChartEnabled = false
+    
     internal override func initialize()
     {
         super.initialize()
@@ -163,6 +165,16 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
         }
     }
     
+    @objc open var circularColumnChartEnabled: Bool
+    {
+        get { return  _circularColumnChartEnabled }
+        set
+        {
+            _circularColumnChartEnabled = newValue
+            setNeedsDisplay()
+        }
+    }
+    
     /// Adds half of the bar width to each side of the x-axis range in order to allow the bars of the barchart to be fully displayed.
     /// **default**: false
     @objc open var fitBars = false
@@ -183,4 +195,7 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
     
     /// `true` if drawing shadows (maxvalue) for each bar is enabled, `false` ifnot
     open var isDrawBarShadowEnabled: Bool { return drawBarShadowEnabled }
+    
+    open var isCircularColumnChart: Bool { return circularColumnChartEnabled }
+    
 }
